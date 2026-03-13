@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
-use App\Http\Resources\TaskCollection;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -16,13 +15,13 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, Project $project): TaskCollection {
+    public function index(Request $request, Project $project) {
         $tasks = $project->tasks()
             ->filter($request->only(["status","priority"]))
             ->latest()
-            ->cursorPaginate(15);  // cursor pagination
+            ->cursorPaginate(15);
 
-        return new TaskCollection($tasks);
+        return TaskResource::collection($tasks);
     }
 
 
@@ -32,7 +31,7 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request, Project $project)
     {
         $task = $project->tasks()->create($request->validated());
-        return new TaskResource($task);
+        return (new TaskResource($task))->response()->setStatusCode(201);
     }
 
     /**
@@ -50,6 +49,7 @@ class TaskController extends Controller
     {
         $task->update($request->validated());
         return new TaskResource($task);
+        
     }
 
     /**

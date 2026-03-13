@@ -7,10 +7,12 @@ use App\Enums\TaskPriority;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Task extends Model
 {
     use SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         "project_id",
