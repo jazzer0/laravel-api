@@ -29,9 +29,10 @@ export const useTasksStore = defineStore('tasks', () => {
     loading.value = true
     error.value = null
     try {
-      const response = await api.post<Task>(`/projects/${projectId}/tasks`, payload)
-      tasks.value.push(response.data)
-      return response.data
+      const response = await api.post<{ data: Task }>(`/projects/${projectId}/tasks`, payload)
+      const task = response.data.data ?? response.data
+      tasks.value.push(task)
+      return task
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Erro desconhecido'
       throw err

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useProjects } from '@/composables/useProjects'
@@ -7,6 +7,7 @@ import TaskCard from '@/components/tasks/TaskCard.vue'
 import TaskForm from '@/components/tasks/TaskForm.vue'
 import TaskFilters from '@/components/tasks/TaskFilters.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
+import type { CreateTaskPayload } from '@/types'
 
 const route  = useRoute()
 const router = useRouter()
@@ -14,7 +15,7 @@ const router = useRouter()
 const projectId = Number(route.params.id)
 
 const { projects, fetchProjects } = useProjects()
-const { tasks, loading, error, filters, loadTasks, createTask, updateTaskStatus, deleteTask } =
+const { tasks, loading, error, filters, loadTasks, createTask, onStatusChanged, deleteTask } =
   useTasks(projectId)
 
 const project    = computed(() => projects.value.find((p) => p.id === projectId) ?? null)
@@ -29,7 +30,7 @@ onMounted(async () => {
   loadTasks()
 })
 
-async function handleCreateTask(payload) {
+async function handleCreateTask(payload: CreateTaskPayload) {
   await createTask(payload)
   showModal.value = false
 }
@@ -102,7 +103,7 @@ async function handleCreateTask(payload) {
         v-for="task in tasks"
         :key="task.id"
         :task="task"
-        @status-changed="updateTaskStatus(task.id, $event)"
+        @status-changed="onStatusChanged(task.id, $event)"
         @deleted="deleteTask(task.id)"
       />
     </TransitionGroup>

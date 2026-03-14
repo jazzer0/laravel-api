@@ -38,7 +38,7 @@ php artisan key:generate
 # Configurar DB_* no .env
 # Para SQLite (zero-config):
 # DB_CONNECTION=sqlite
-touch backend/database/database.sqlite
+touch database/database.sqlite
 
 php artisan migrate --seed
 php artisan serve
@@ -66,3 +66,15 @@ cd backend && php artisan test
 # Frontend — Vitest
 cd frontend && npm run test
 ```
+
+---
+
+## O que o projeto faz
+
+Permite criar e listar projetos e, em cada projeto, criar tarefas com título, prioridade e data. As tarefas podem ser filtradas por status/prioridade, o status pode ser alterado na própria lista e tarefas em atraso são assinaladas. A API é REST (JSON) e a interface é uma SPA que consome essa API.
+
+**Stack**
+
+- **Backend:** Laravel 12, PHPUnit.
+- **Frontend:** Vue 3, Vue Router, Pinia, Tailwind CSS 4, Axios, TypeScript, Vite, Vitest.
+

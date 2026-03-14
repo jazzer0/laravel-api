@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Models\Project;
-use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
@@ -28,16 +28,10 @@ class ProjectController extends Controller
         return (new ProjectResource($project))->response()->setStatusCode(201);
     }
 
-   public function update(Request $request, Project $project)
+    public function update(UpdateProjectRequest $request, Project $project)
     {
-        $data = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'sometimes|in:active,archived',
-        ]);
-
-        $project->update($data);
-        return response()->json($project);
+        $project->update($request->validated());
+        return new ProjectResource($project);
     }
 
     public function destroy(Project $project)
